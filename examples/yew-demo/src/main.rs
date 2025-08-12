@@ -56,7 +56,7 @@ fn app() -> Html {
         Callback::from(move |_e: web_sys::MouseEvent| {
             // Можно не запрещать, но UX логичнее — только после подписи
             if has_signed {
-                export_contract_to_pdf("contract-root", "signed-contract.pdf");
+                export_contract_to_pdf("paper", "signed-contract.pdf");
             }
         })
     };

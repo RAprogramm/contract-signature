@@ -1,12 +1,12 @@
 // ------------------------------
-// Design tokens
+// Design tokens (адаптив через clamp/vh/vw)
 // ------------------------------
 $bg: #f0f2f5;
 $paper: #ffffff;
-$ink: #111827; // text
+$ink: #111827;
 $muted: #6b7280;
 $line: #e5e7eb;
-$accent: #10b981; // green
+$accent: #10b981;
 $accent-600: #059669;
 $danger: #ef4444;
 
@@ -16,8 +16,20 @@ $shadow-elev: 0 18px 60px rgba(0, 0, 0, .25);
 $radius-sm: 6px;
 $radius-md: 8px;
 
-$w-wrap: min(92vw, 900px);
-$contract-h: 480px;
+// Адаптивные размеры
+$wrap-max: 900px;
+$w-wrap: min(94vw, #{$wrap-max});
+$pad-y: clamp(12px, 3vw, 24px);
+$pad-x: clamp(12px, 4vw, 32px);
+
+// Высота вьюпорта договора
+$contract-h: clamp(320px, 60vh, 640px);
+
+// Размеры области подписи
+$sig-w: clamp(160px, 24vw, 220px);
+$sig-h: clamp(56px, 12vw, 80px);
+$sig-right: clamp(16px, 3vw, 35px);
+$sig-bottom: clamp(48px, 8vh, 80px);
 
 // Motion helpers
 @mixin ease-out {
@@ -60,11 +72,11 @@ $contract-h: 480px;
   }
 }
 
-// Reduce motion for folks who prefer it
+// Reduce motion
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
-    transition: none !important
+    transition: none !important;
   }
 }
 
@@ -74,12 +86,12 @@ $contract-h: 480px;
 *,
 *::before,
 *::after {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%
+  height: 100%;
 }
 
 body {
@@ -93,10 +105,14 @@ body {
 // ------------------------------
 // Paper / Document
 // ------------------------------
+#paper {
+  background: #fff !important;
+}
+
 .paper {
   width: $w-wrap;
-  margin: 24px auto;
-  padding: 24px 32px;
+  margin: clamp(12px, 3.2vw, 24px) auto;
+  padding: $pad-y $pad-x;
   background: $paper;
   border-radius: $radius-md;
   box-shadow: $shadow-paper;
@@ -110,9 +126,9 @@ body {
 }
 
 .paper__subtitle {
-  margin: 0 0 16px 0;
+  margin: 0 0 clamp(10px, 2vw, 16px) 0;
   color: $muted;
-  font-size: 14px;
+  font-size: clamp(13px, 1.6vw, 14px);
 }
 
 // ------------------------------
@@ -127,13 +143,13 @@ body {
   border-radius: $radius-sm;
   background: repeating-linear-gradient(#fff, #fff 28px, #fafafa 28px, #fafafa 56px);
 
-  // Fancy but subtle custom scrollbars (where supported)
+  // Скроллбары (где поддерживается)
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
 
   &::-webkit-scrollbar {
     height: 10px;
-    width: 10px
+    width: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -144,33 +160,31 @@ body {
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8
+    background: #94a3b8;
   }
 }
 
 .contract__content {
-  padding: 8px 16px 20px 16px
+  padding: 8px 16px clamp(16px, 2.2vw, 20px) 16px;
 }
 
 .contract__spacer {
-  height: 90px
+  height: clamp(60px, 8vh, 90px);
 }
 
-// space before footer
-
 .contract__footer {
-  margin-top: 24px
+  margin-top: clamp(16px, 2.6vw, 24px);
 }
 
 .contract__signature-caption {
   float: right;
   text-align: center;
-  width: 260px;
+  width: clamp(180px, 28vw, 260px);
 }
 
 .caption {
   color: $muted;
-  font-size: 12px;
+  font-size: clamp(11px, 1.4vw, 12px);
   margin-bottom: 6px;
 }
 
@@ -180,7 +194,7 @@ body {
 }
 
 .contract__clear {
-  clear: both
+  clear: both;
 }
 
 // ------------------------------
@@ -188,42 +202,43 @@ body {
 // ------------------------------
 .signature-placeholder {
   position: absolute;
-  right: 35px; // sync with Rust fallback X if anchor is missing
-  bottom: 80px; // sync with Rust fallback Y if anchor is missing
-  width: 220px;
-  height: 80px;
+  right: $sig-right;
+  bottom: $sig-bottom;
+  width: $sig-w;
+  height: $sig-h;
   border: 2px dashed #9ca3af;
   border-radius: $radius-sm;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $muted;
-  font-size: 14px;
+  font-size: clamp(12px, 2.4vw, 14px);
   background: rgba(0, 0, 0, 0.02);
   animation: pulse-border 2.2s ease-out infinite;
 
-  // When replaced by the actual signature image, you may hide it from Rust.
   &--hidden {
-    display: none
+    display: none;
   }
 }
 
 // ------------------------------
-// Gate (checkbox unlock)
+// Gate (checkbox unlock) + место для Yew
 // ------------------------------
 .gate {
   width: $w-wrap;
-  margin: 12px auto 8px;
-  justify-content: space-between;
+  margin: clamp(8px, 2.4vw, 12px) auto clamp(8px, 2.4vw, 12px);
   color: #374151;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: clamp(8px, 2.4vw, 16px);
+  flex-wrap: wrap;
 }
 
 .gate__label {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(8px, 2.2vw, 10px);
   cursor: pointer;
   user-select: none;
 }
@@ -236,15 +251,15 @@ body {
 
 .gate__checkbox:disabled {
   cursor: not-allowed;
-  opacity: .6
+  opacity: .6;
 }
 
 .gate__text {
-  font-size: 15px
+  font-size: clamp(14px, 2.2vw, 15px);
 }
 
 // ------------------------------
-// Modal (used by Yew component)
+// Modal (Yew компонент рендрит DOM)
 // ------------------------------
 .cs-modal-backdrop {
   position: fixed;
@@ -261,15 +276,15 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  // No background here; panel handles visuals
 }
 
 .cs-modal__panel {
   position: relative;
   background: #fff;
   border-radius: $radius-md;
-  padding: 16px;
-  min-width: 560px;
+  padding: clamp(12px, 3vw, 16px);
+  min-width: min(92vw, 560px);
+  max-width: 96vw;
   box-shadow: $shadow-elev;
   animation: scale-up .2s ease-out;
 }
@@ -282,7 +297,7 @@ body {
 }
 
 // ------------------------------
-// Buttons (including IDs used by Yew)
+// Buttons
 // ------------------------------
 button {
   appearance: none;
@@ -291,24 +306,24 @@ button {
   color: #fff;
   padding: 10px 14px;
   border-radius: $radius-sm;
-  font-size: 14px;
+  font-size: clamp(14px, 2.2vw, 14px);
   font-weight: 600;
   cursor: pointer;
   @include ease-out;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(16, 185, 129, .28)
+    box-shadow: 0 6px 18px rgba(16, 185, 129, .28);
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: none
+    box-shadow: none;
   }
 
   &:focus-visible {
     outline: 3px solid rgba($accent, .35);
-    outline-offset: 2px
+    outline-offset: 2px;
   }
 }
 
@@ -318,7 +333,7 @@ button.secondary {
   border-color: #e5e7eb;
 
   &:hover {
-    background: #e5e7eb
+    background: #e5e7eb;
   }
 }
 
@@ -330,12 +345,11 @@ button.secondary {
   transform: none;
 }
 
-// Optional destructive styling, if когда-нибудь появится “Удалить подпись”
 button.danger {
   background: $danger;
 
   &:hover {
-    box-shadow: 0 6px 18px rgba(239, 68, 68, .28)
+    box-shadow: 0 6px 18px rgba(239, 68, 68, .28);
   }
 }
 
@@ -353,10 +367,24 @@ button.danger {
 }
 
 .export {
+  display: inline-flex;
+  align-items: center;
   gap: 12px;
 }
 
 .export__hint {
   font-size: 14px;
   color: #6b7280;
+}
+
+// Мелкие доработки для телефонов
+@media (max-width: 560px) {
+  .contract {
+    border-radius: 0;
+  }
+
+  .paper {
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
