@@ -3,6 +3,11 @@ name = "contract-signature"
 version = "0.1.0"
 edition = "2024"
 
+[workspace]
+members = [".", "examples/yew-demo", "examples/leptos-demo"]
+resolver = "3"
+
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
@@ -24,10 +29,15 @@ web-sys = { version = "0.3", features = [
   "console",
   "MouseEvent",
   "PointerEvent",
+  "CssStyleDeclaration",
 ] }
+
 js-sys = "0.3"
 serde = { version = "1", features = ["derive"] }
-masterror = "0.1"
+# TODO: go to 
+# masterror = "0.1"
+
+thiserror = "2"
 
 # Опционально под конкретные UI
 yew = { version = "0.21", optional = true, default-features = false, features = [

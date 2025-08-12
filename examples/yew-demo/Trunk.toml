@@ -1,0 +1,9 @@
+[build]
+public_url = "/"
+# Включает минимизацию (и, при наличии wasm-opt в PATH, Trunk его сам дернет)
+minify = "on_release"
+
+[serve]
+address = "127.0.0.1"
+port = 8080
+open = false

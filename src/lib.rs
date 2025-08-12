@@ -1,14 +1,17 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod error;
+mod signature_core;
+mod ui_common;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[cfg(feature = "yew")]
+mod yew;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+#[cfg(feature = "leptos")]
+mod leptos;
+
+pub use error::SigError;
+pub use signature_core::SignaturePad;
+
+#[cfg(feature = "leptos")]
+pub use crate::leptos::{signature_pad_leptos, LProps};
+#[cfg(feature = "yew")]
+pub use crate::yew::{SignaturePadYew, SignatureProps, SignatureStyle};

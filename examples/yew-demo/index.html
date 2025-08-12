@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yew Demo — contract-signature</title>
+    <link data-trunk rel="rust" />
+    <link data-trunk rel="scss" href="index.scss" />
+  </head>
+  <body>
+
+    <div class="paper" aria-label="Документ договора">
+      <h2 class="paper__title">Договор оказания услуг</h2>
+      <p class="paper__subtitle">Дочитай до конца, чтобы разблокировать чекбокс.</p>
+
+      <div id="contract-root" class="contract" aria-live="polite">
+        <div class="contract__content">
+          <p>1. Предмет договора...</p>
+          <p>2. Права и обязанности сторон...</p>
+          <p>3. Сроки, порядок сдачи-приемки работ...</p>
+          <p>4. Стоимость и порядок расчетов...</p>
+          <p>5. Ответственность сторон...</p>
+          <p>6. Форс-мажор...</p>
+          <p>7. Порядок разрешения споров...</p>
+          <p>8. Заключительные положения...</p>
+
+          <div class="contract__spacer"></div>
+
+          <div class="contract__footer">
+            <div class="contract__signature-caption">
+              <div class="caption">Подпись Заказчика</div>
+              <div class="caption__line" aria-hidden="true"></div>
+            </div>
+            <div class="contract__clear"></div>
+          </div>
+        </div>
+
+        <!-- Anchor used for signature placement -->
+        <div id="signature-anchor" class="signature-placeholder" aria-label="Место для подписи">
+          Место для подписи
+        </div>
+      </div>
+    </div>
+
+    <div class="gate" role="group" aria-label="Подтверждение прочтения">
+      <label class="gate__label">
+        <input id="read-checkbox" class="gate__checkbox" type="checkbox" disabled>
+        <span class="gate__text">Прочитал, согласен и готов подписать</span>
+      </label>
+
+      <div id="app"></div>
+    </div>
+
+    <noscript>
+      <div class="noscript">Для подписания требуется включить JavaScript.</div>
+    </noscript>
+
+    <script>
+      // Unlock the checkbox when scrolled to bottom
+      const root = document.getElementById('contract-root');
+      const checkbox = document.getElementById('read-checkbox');
+      function updateGate() {
+        if (!root || !checkbox) return;
+        if (root.scrollTop + root.clientHeight >= root.scrollHeight - 2) {
+          checkbox.disabled = false;
+          root.removeEventListener('scroll', updateGate);
+        }
+      }
+      root?.addEventListener('scroll', updateGate, { passive: true });
+      updateGate();
+    </script>
+    <!-- Внешние скрипты, подгружаются один раз -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+
+<!-- Небольшая обёртка: делает window.exportContractToPdf(...) -->
+<script>
+  // Tiny glue so Rust can call a single global function.
+  window.exportContractToPdf = async function(containerId, filename) {
+    const el = document.getElementById(containerId);
+    if (!el || !window.jspdf) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      unit: "px",
+      format: "a4",
+      putOnlyUsedFonts: true,
+      compress: true
+    });
+
+    // Render DOM into PDF pages
+    await doc.html(el, {
+      callback: (doc) => doc.save(filename || "contract.pdf"),
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      x: 0,
+      y: 0,
+      margin: [20, 20, 20, 20],
+      autoPaging: "text"
+    });
+  }
+</script>
+
+  </body>
+</html>

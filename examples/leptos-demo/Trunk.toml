@@ -1,0 +1,10 @@
+[build]
+public_url = "/"
+
+[tools.wasm_bindgen]
+wasm_opt = ["-Oz"]
+
+[serve]
+address = "127.0.0.1"
+port = 8081
+open = false

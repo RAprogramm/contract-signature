@@ -281,8 +281,8 @@ version = "0.1.0"
 dependencies = [
  "js-sys",
  "leptos",
- "masterror",
  "serde",
+ "thiserror 2.0.14",
  "wasm-bindgen",
  "web-sys",
  "yew",
@@ -1237,6 +1237,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "leptos-demo"
+version = "0.1.0"
+dependencies = [
+ "contract-signature",
+ "leptos",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "leptos_config"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1380,17 +1390,6 @@ dependencies = [
  "proc-macro-utils",
  "proc-macro2",
  "quote",
-]
-
-[[package]]
-name = "masterror"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b5c443b8cfbdbd4e01cc93f4d4057a7f2d936bef0026b080be5783a99e36861"
-dependencies = [
- "serde",
- "thiserror 2.0.14",
- "tracing",
 ]
 
 [[package]]
@@ -2687,6 +2686,16 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "yew-macro",
+]
+
+[[package]]
+name = "yew-demo"
+version = "0.1.0"
+dependencies = [
+ "contract-signature",
+ "wasm-bindgen",
+ "web-sys",
+ "yew",
 ]
 
 [[package]]

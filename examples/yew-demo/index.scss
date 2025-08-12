@@ -1,0 +1,362 @@
+// ------------------------------
+// Design tokens
+// ------------------------------
+$bg: #f0f2f5;
+$paper: #ffffff;
+$ink: #111827; // text
+$muted: #6b7280;
+$line: #e5e7eb;
+$accent: #10b981; // green
+$accent-600: #059669;
+$danger: #ef4444;
+
+$shadow-paper: 0 6px 28px rgba(0, 0, 0, .12);
+$shadow-elev: 0 18px 60px rgba(0, 0, 0, .25);
+
+$radius-sm: 6px;
+$radius-md: 8px;
+
+$w-wrap: min(92vw, 900px);
+$contract-h: 480px;
+
+// Motion helpers
+@mixin ease-out {
+  transition: all .18s cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes scale-up {
+  from {
+    transform: translateY(8px) scale(.98);
+    opacity: 0
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1
+  }
+}
+
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba($accent, .35)
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba($accent, 0)
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba($accent, 0)
+  }
+}
+
+// Reduce motion for folks who prefer it
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important
+  }
+}
+
+// ------------------------------
+// Base
+// ------------------------------
+*,
+*::before,
+*::after {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  background: $bg;
+  color: $ink;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.45;
+}
+
+// ------------------------------
+// Paper / Document
+// ------------------------------
+.paper {
+  width: $w-wrap;
+  margin: 24px auto;
+  padding: 24px 32px;
+  background: $paper;
+  border-radius: $radius-md;
+  box-shadow: $shadow-paper;
+  animation: fade-in .24s ease-out;
+}
+
+.paper__title {
+  margin: 0 0 8px 0;
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 700;
+}
+
+.paper__subtitle {
+  margin: 0 0 16px 0;
+  color: $muted;
+  font-size: 14px;
+}
+
+// ------------------------------
+// Contract viewport
+// ------------------------------
+.contract {
+  position: relative;
+  width: 100%;
+  height: $contract-h;
+  overflow: auto;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: repeating-linear-gradient(#fff, #fff 28px, #fafafa 28px, #fafafa 56px);
+
+  // Fancy but subtle custom scrollbars (where supported)
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    height: 10px;
+    width: 10px
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8
+  }
+}
+
+.contract__content {
+  padding: 8px 16px 20px 16px
+}
+
+.contract__spacer {
+  height: 90px
+}
+
+// space before footer
+
+.contract__footer {
+  margin-top: 24px
+}
+
+.contract__signature-caption {
+  float: right;
+  text-align: center;
+  width: 260px;
+}
+
+.caption {
+  color: $muted;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.caption__line {
+  height: 1px;
+  background: $line;
+}
+
+.contract__clear {
+  clear: both
+}
+
+// ------------------------------
+// Signature placeholder (anchor)
+// ------------------------------
+.signature-placeholder {
+  position: absolute;
+  right: 35px; // sync with Rust fallback X if anchor is missing
+  bottom: 80px; // sync with Rust fallback Y if anchor is missing
+  width: 220px;
+  height: 80px;
+  border: 2px dashed #9ca3af;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $muted;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.02);
+  animation: pulse-border 2.2s ease-out infinite;
+
+  // When replaced by the actual signature image, you may hide it from Rust.
+  &--hidden {
+    display: none
+  }
+}
+
+// ------------------------------
+// Gate (checkbox unlock)
+// ------------------------------
+.gate {
+  width: $w-wrap;
+  margin: 12px auto 8px;
+  justify-content: space-between;
+  color: #374151;
+  display: flex;
+  align-items: center;
+}
+
+.gate__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.gate__checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: $accent;
+}
+
+.gate__checkbox:disabled {
+  cursor: not-allowed;
+  opacity: .6
+}
+
+.gate__text {
+  font-size: 15px
+}
+
+// ------------------------------
+// Modal (used by Yew component)
+// ------------------------------
+.cs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  z-index: 9999;
+  animation: fade-in .18s ease-out;
+}
+
+.cs-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  // No background here; panel handles visuals
+}
+
+.cs-modal__panel {
+  position: relative;
+  background: #fff;
+  border-radius: $radius-md;
+  padding: 16px;
+  min-width: 560px;
+  box-shadow: $shadow-elev;
+  animation: scale-up .2s ease-out;
+}
+
+.controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+// ------------------------------
+// Buttons (including IDs used by Yew)
+// ------------------------------
+button {
+  appearance: none;
+  border: 1px solid transparent;
+  background: $accent;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  @include ease-out;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, .28)
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($accent, .35);
+    outline-offset: 2px
+  }
+}
+
+button.secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #e5e7eb;
+
+  &:hover {
+    background: #e5e7eb
+  }
+}
+
+#sign-open-btn:disabled,
+#sign-confirm-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+// Optional destructive styling, if когда-нибудь появится “Удалить подпись”
+button.danger {
+  background: $danger;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(239, 68, 68, .28)
+  }
+}
+
+// ------------------------------
+// Utility
+// ------------------------------
+.noscript {
+  width: $w-wrap;
+  margin: 12px auto;
+  padding: 12px 16px;
+  border-radius: $radius-sm;
+  background: #fff7ed;
+  color: #7c2d12;
+  border: 1px solid #fed7aa;
+}
+
+.export {
+  gap: 12px;
+}
+
+.export__hint {
+  font-size: 14px;
+  color: #6b7280;
+}

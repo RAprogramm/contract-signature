@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Leptos Demo — contract-signature</title>
+    <style>
+      #contract-root { position: relative; width: 800px; height: 400px; overflow: auto; border: 1px solid #ddd; margin: 16px auto; padding: 16px; }
+      .signature-area { margin: 16px auto; width: 520px; }
+      .controls { margin-top: 8px; display: flex; gap: 8px; }
+      .gate { width: 800px; margin: 8px auto; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div id="contract-root">
+      <h3>Договор-рыба</h3>
+      <p>Прокрути вниз, чтобы активировать чекбокс «Прочитал».</p>
+      <div style="height: 900px;"></div>
+      <p>Футер договора. Сюда будет наложена подпись.</p>
+    </div>
+
+    <div class="gate">
+      <label>
+        <input id="read-checkbox" type="checkbox" disabled>
+        Прочитал и согласен
+      </label>
+    </div>
+
+    <script>
+      const root = document.getElementById('contract-root');
+      const checkbox = document.getElementById('read-checkbox');
+      function updateGate() {
+        if (root.scrollTop + root.clientHeight >= root.scrollHeight - 2) {
+          checkbox.disabled = false;
+        }
+      }
+      root.addEventListener('scroll', updateGate);
+      updateGate();
+    </script>
+
+    <script data-trunk src="leptos-demo.js"></script>
+  </body>
+</html>
